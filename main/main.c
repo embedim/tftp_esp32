@@ -19,6 +19,10 @@
 #include "lwip/err.h"
 #include "lwip/sys.h"
 
+#include "esp_log.h"
+#include "vfs.h"
+#include "tftpd.h"
+
 /* The examples use WiFi configuration that you can set via project configuration menu
 
    If you'd rather not, just change the below entries to strings with
@@ -170,4 +174,8 @@ void app_main(void)
 
     ESP_LOGI(TAG, "ESP_WIFI_MODE_STA");
     wifi_init_sta();
+
+    init_mount_fs();
+    init_tftpd();
+
 }
