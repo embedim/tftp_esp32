@@ -19,9 +19,11 @@
 #include "lwip/err.h"
 #include "lwip/sys.h"
 
+#include "esp_console.h"
 #include "esp_log.h"
 #include "vfs.h"
 #include "tftpd.h"
+#include "cmd_fs.h"
 
 /* The examples use WiFi configuration that you can set via project configuration menu
 
@@ -177,5 +179,13 @@ void app_main(void)
 
     init_mount_fs();
     init_tftpd();
+
+    esp_console_repl_t *repl = NULL;
+    esp_console_repl_config_t repl_config = ESP_CONSOLE_REPL_CONFIG_DEFAULT();
+    repl_config.prompt = "$";
+    esp_console_dev_uart_config_t uart_config = ESP_CONSOLE_DEV_UART_CONFIG_DEFAULT();
+    ESP_ERROR_CHECK(esp_console_new_repl_uart(&uart_config, &repl_config, &repl));
+    register_cmd_fs();
+    ESP_ERROR_CHECK(esp_console_start_repl(repl));
 
 }
