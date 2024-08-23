@@ -23,5 +23,10 @@ void init_mount_fs(){
         ESP_LOGE(TAG, "Failed to mount FATFS (%s)", esp_err_to_name(err));
         return;
     }
+
+    size_t total = 0, free_bytes = 0;
+    esp_vfs_fat_info(BASE_PATH, &total, &free_bytes);
+    ESP_LOGI(TAG, "FAT FS: total: %d, free: %d", total, free_bytes);
+
 }
 
