@@ -15,7 +15,7 @@ void* tftp_open(const char* fname, const char* mode, u8_t write)
     char path[256];
     sprintf(path, "%s/%s", base_path, fname);
 
-    fd = fopen(path, write ? "wb+":"rb");
+    fd = fopen(path, write ? "wb":"rb");
     if (fd == NULL) {
         ESP_LOGE(TAG, "Failed to open file for '%s'", write?"wb+":"rb");
         return 0;
@@ -39,6 +39,12 @@ int tftp_read(void* handle, void* buf, int bytes){
 int tftp_write(void* handle, struct pbuf* p)
 {
     size_t written = fwrite(p->payload, sizeof(char), p->len, handle);
+
+    if (written < p->len) {
+        ESP_LOGE(TAG, "Memory error");
+        return -1;
+    }
+
     file_size += written;
     return written;
 }
